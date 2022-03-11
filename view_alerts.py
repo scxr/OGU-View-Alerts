@@ -2,11 +2,12 @@ import requests
 import time
 from bs4 import BeautifulSoup
 import requests
+import hashlib
 wh = input("Enter discord webhook: ")
 def alertBlocked():
     poglul = {
         "avatar_url":"https://pbs.twimg.com/profile_images/930577665643438080/VVjqz6XO.jpg",
-        "name":"Alert logger",
+        "name":"dumb ass",
         "embeds": [
             {
                 "title": "New alert found",
@@ -23,7 +24,7 @@ def alertBlocked():
 def postDisc(user_from, alert_text, icon) :
     poglul = {
         "avatar_url":"https://pbs.twimg.com/profile_images/930577665643438080/VVjqz6XO.jpg",
-        "name":"Alert logger",
+        "name":"dumb ass",
         "embeds": [
             {
                 "title": "New alert found",
@@ -41,10 +42,10 @@ def postDisc(user_from, alert_text, icon) :
     }
     req = requests.post(wh, json=poglul)
 def main():
-    tts = input("Time between checking for alerts (in seconds) : ")
+    tts = int(input("Time between checking for alerts (in seconds) : "))
     cf_clearance = input("Please enter cookie value of 'cf_clearance' : ")
     token = input("Please enter cookie value of 'ogusersmybbuser' : ")
-
+    tracked = []
     while 1:
         headers = {
             'authority': 'ogusers.com',
@@ -75,7 +76,7 @@ def main():
 
         soup = BeautifulSoup(response.text, "html.parser")
         alerts = soup.find_all("tr")
-        tracked = []
+        
 
         for alert in alerts[::-1]:
             user =""
@@ -89,10 +90,12 @@ def main():
                     is_read = False
                 alert_text = str(alert).split("</span>")[1].split("</b>")[0].replace("<b>", "")
                 user_icon = alert.find_all("a", {"class":"avatar"})[0].find_all("img")[0]["src"]
-                print(f"{user} : {alert_text.lstrip()} : Unread: {is_read}")
-                if f"{user} : {alert_text.lstrip()}" not in tracked:
+                
+                if hashlib.md5(f"{user} : {alert_text.lstrip()}".encode()).hexdigest() not in tracked:
+                    print(f"New alert from : {user} detected")
                     postDisc(user, alert_text.lstrip(), user_icon)
-                    tracked.append(f"{user} : {alert_text.lstrip()}")
-
+                    tracked.append(hashlib.md5(f"{user} : {alert_text.lstrip()}".encode()).hexdigest())
+                else:
+                    print(f"Already tracked from : {user}")
         time.sleep(tts)
 main()
