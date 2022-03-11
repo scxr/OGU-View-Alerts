@@ -70,6 +70,7 @@ def main():
         response = requests.get('https://ogusers.com/alerts.php', headers=headers, params=params)
         if response.status_code == 403:
             print("Blocked")
+            alertBlocked()
             cf_clearance = input("Please enter cookie value of 'cf_clearance' : ")
 
         soup = BeautifulSoup(response.text, "html.parser")
