@@ -18,3 +18,6 @@ __DO NOT MESSAGE ME REGARDING UPDATES TO THIS OR SUPPORT__
 
 it is intuitive, if you dont understand it, its on you lol
 
+example output:
+
+![output](https://imgur.com/Rhd4d9h.png)
