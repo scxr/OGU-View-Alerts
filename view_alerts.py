@@ -7,14 +7,14 @@ wh = input("Enter discord webhook: ")
 def alertBlocked():
     poglul = {
         "avatar_url":"https://pbs.twimg.com/profile_images/930577665643438080/VVjqz6XO.jpg",
-        "name":"dumb ass",
+        "name":"alert finder",
         "embeds": [
             {
                 "title": "New alert found",
                 "description": f"CF has been blocked, please enter new token in terminal",
                 "color": 16304348,
                 "footer":{
-                    "text":"made by t.me/protective"
+                    "text":"made by t.me/protective (nemo onsite)"
                     },
 
             }
@@ -24,14 +24,14 @@ def alertBlocked():
 def postDisc(user_from, alert_text, icon) :
     poglul = {
         "avatar_url":"https://pbs.twimg.com/profile_images/930577665643438080/VVjqz6XO.jpg",
-        "name":"dumb ass",
+        "name":"alert finder",
         "embeds": [
             {
                 "title": "New alert found",
                 "description": f"From User: {user_from}\nAlert : {alert_text}",
                 "color": 16304348,
                 "footer":{
-                    "text":"made by t.me/protective"
+                    "text":"made by t.me/protective (nemo onsite)"
                     },
 
                 "thumbnail": {
