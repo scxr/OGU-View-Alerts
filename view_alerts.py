@@ -2,7 +2,7 @@ import requests
 import time
 from bs4 import BeautifulSoup
 import requests
-import hashlib
+import re
 wh = input("Enter discord webhook: ")
 def alertBlocked():
     poglul = {
@@ -41,6 +41,11 @@ def postDisc(user_from, alert_text, icon) :
         ]
     }
     req = requests.post(wh, json=poglul)
+CLEANR = re.compile('<.*?>') 
+
+def cleanhtml(raw_html):
+  cleantext = re.sub(CLEANR, '', raw_html)
+  return cleantext
 def main():
     tts = int(input("Time between checking for alerts (in seconds) : "))
     cf_clearance = input("Please enter cookie value of 'cf_clearance' : ")
@@ -69,6 +74,8 @@ def main():
         )
 
         response = requests.get('https://ogusers.com/alerts.php', headers=headers, params=params)
+        with open("out.html", "w+") as f:
+            f.write(response.text)
         if response.status_code == 403:
             print("Blocked")
             alertBlocked()
@@ -90,11 +97,11 @@ def main():
                     is_read = False
                 alert_text = str(alert).split("</span>")[1].split("</b>")[0].replace("<b>", "")
                 user_icon = alert.find_all("a", {"class":"avatar"})[0].find_all("img")[0]["src"]
-                
-                if hashlib.md5(f"{user} : {alert_text.lstrip()}".encode()).hexdigest() not in tracked:
+                pid = alert.find_all("a")[1]["href"]
+                if pid not in tracked:
                     print(f"New alert from : {user} detected")
-                    postDisc(user, alert_text.lstrip(), user_icon)
-                    tracked.append(hashlib.md5(f"{user} : {alert_text.lstrip()}".encode()).hexdigest())
+                    postDisc(user, cleanhtml(alert_text.lstrip()), user_icon)
+                    tracked.append(pid)
                 else:
                     print(f"Already tracked from : {user}")
         time.sleep(tts)
